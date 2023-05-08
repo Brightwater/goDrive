@@ -1,22 +1,29 @@
 package main
 
 import (
-	"goDrive/internal"
 	"log"
 	"net/http"
-	"goDrive/internal/service"
+
+	"github.com/Brightwater/goDrive/internal"
+	"github.com/Brightwater/goDrive/internal/cron"
+	"github.com/Brightwater/goDrive/internal/db"
+	"github.com/Brightwater/goDrive/internal/service"
 )
 
-const port = ":7789"
-
 func main() {
-	service.InitProps()
 
-	service.InitPgPool()
-	defer service.CloseDb()
+	service.InitProps()
+	port := ":" + service.AppConfig.HttpPort
+
+	db.InitPgPool()
+	defer db.CloseDb()
+
+	cron.StartCronService()
+	defer cron.StopCronService()
 
 	r := internal.SetupRoutes()
 
 	log.Printf("Server started on port %s", port)
-	log.Fatal(http.ListenAndServe(port, r))	
+
+	log.Fatal(http.ListenAndServe(port, r))
 }

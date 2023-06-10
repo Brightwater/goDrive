@@ -22,7 +22,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-const maxRequestBodySize int64 = 2e+10 // 20Gb
 var charset = []byte("abcdefghijklmnopqrstuvwxyz0123456789")
 
 func SetupRoutes() *chi.Mux {
@@ -60,7 +59,7 @@ func getPermissionCode(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	uses,err := strconv.ParseInt(chi.URLParam(r, "uses"), 10, 32)
+	uses, err := strconv.ParseInt(chi.URLParam(r, "uses"), 10, 32)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -113,7 +112,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 
 	var filePath string
 	localFile, err := db.GetLocalFileDownload(fileName, code)
-	
+
 	if err != nil {
 		log.Println("Local file not found, checking upload files")
 		upFile, err := db.GetUploadedFile(fileName, code)
@@ -121,7 +120,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to get file", http.StatusInternalServerError)
 			return
 		}
-		filePath = service.AppConfig.UploadPath + "/" + upFile.FileName 
+		filePath = service.AppConfig.UploadPath + "/" + upFile.FileName
 	} else {
 		filePath = localFile.FilePath
 	}
@@ -130,7 +129,6 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Failed to get file info: %s", err.Error()), http.StatusInternalServerError)
 		return
 	}
-
 
 	mode := fileInfo.Mode()
 	if mode.IsDir() {
@@ -153,7 +151,7 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if mode.IsRegular() {
 		log.Println("Path is a file")
 
-		file, err := os.Open(filePath)  
+		file, err := os.Open(filePath)
 		if err != nil {
 			http.NotFound(w, r)
 			return
@@ -239,7 +237,7 @@ type JsonData struct {
 
 // path, hours
 func addLocalFileDownload(w http.ResponseWriter, r *http.Request) {
-	
+
 	err := auth.VerifyTokenAndScope(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
@@ -261,7 +259,7 @@ func addLocalFileDownload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	
+
 	filePath := jsonData.FilePath
 
 	fileName := filepath.Base(filePath)
@@ -271,7 +269,7 @@ func addLocalFileDownload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	err = db.PersistLocalFileDl(filePath, fileName, code, hours)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -293,7 +291,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
-	}	
+	}
 
 	// Get the boundary from the request Content-Type header
 	_, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))

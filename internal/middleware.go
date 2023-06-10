@@ -10,6 +10,8 @@ import (
 	"github.com/go-chi/cors"
 )
 
+const maxRequestBodySize int64 = 2e+10 // 20Gb
+
 func applyMiddleWare(r *chi.Mux) {
 	cors := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -33,12 +35,12 @@ func applyMiddleWare(r *chi.Mux) {
 	})
 
 	// Serve the index.html file as the root path
-    r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-        http.ServeFile(w, r, path.Join("static", "index.html"))
-    })
+	r.Get("/*", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path.Join("static", "index.html"))
+	})
 
 	// Serve static files from the "public" directory
-    r.Handle("/*", http.FileServer(http.Dir("static")))
+	r.Handle("/_app/*", http.FileServer(http.Dir("static")))
 }
 
 // func logRequest(next http.Handler) http.Handler {

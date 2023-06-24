@@ -11,10 +11,10 @@ require (
 require (
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/felixge/fgprof v0.9.3 // indirect
-	github.com/google/pprof v0.0.0-20230502171905-255e3b9b56de // indirect
-	github.com/ianlancetaylor/demangle v0.0.0-20220517205856-0058ec4f073c // indirect
-	golang.org/x/net v0.9.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	github.com/google/pprof v0.0.0-20230602150820-91b7bce49751 // indirect
+	github.com/ianlancetaylor/demangle v0.0.0-20230524184225-eabc099b10ab // indirect
+	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/sys v0.9.0 // indirect
 )
 
 require (
@@ -31,6 +31,6 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/profile v1.7.0
 	github.com/robfig/cron v1.2.0
-	golang.org/x/crypto v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/crypto v0.10.0 // indirect
+	golang.org/x/text v0.10.0 // indirect
 )

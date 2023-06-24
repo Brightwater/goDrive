@@ -13,12 +13,14 @@ import (
 const maxRequestBodySize int64 = 2e+10 // 20Gb
 
 func applyMiddleWare(r *chi.Mux) {
-	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Access-Control-Allow-Origin"},
-		AllowCredentials: true,
-	})
+	cors := cors.New(
+		cors.Options{
+			AllowedOrigins:   []string{"*"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Access-Control-Allow-Origin"},
+			AllowCredentials: true,
+		},
+	)
 
 	r.Use(cors.Handler)
 	r.Use(middleware.Logger) // add log middleware

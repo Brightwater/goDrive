@@ -27,3 +27,4 @@ uploadedFiles/
 static/
 
 .vscode/
+.env

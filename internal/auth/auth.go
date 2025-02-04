@@ -82,7 +82,7 @@ func VerifyTokenAndScope(r *http.Request) error {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode == 401 {
+	if resp.StatusCode == http.StatusUnauthorized {
 		return fmt.Errorf("unauthorized")
 	}
 	if resp.StatusCode != http.StatusOK {

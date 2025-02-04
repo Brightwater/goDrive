@@ -158,6 +158,9 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
+		// Set the Content-Disposition header to prompt the browser to download the file
+    	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
+
 		// Serve the file content to the client
 		http.ServeContent(w, r, fileName, fileInfo.ModTime(), file)
 
@@ -293,6 +296,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Print("Uploading file")
+
 	// Get the boundary from the request Content-Type header
 	_, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
 	if err != nil {
@@ -300,9 +305,13 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Print("Uploading file 2")
+
 	// Get the boundary from the media type
 	boundary := params["boundary"]
 	mr := multipart.NewReader(r.Body, boundary)
+
+	fmt.Print("Uploading file 3")
 
 	// Get the file part
 	fh, err := mr.NextPart()
@@ -310,6 +319,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Print("Uploading file 4")
 
 	uploadPath := service.AppConfig.UploadPath + "/"
 
@@ -321,6 +332,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 
+	fmt.Print("Uploading file 5")
+
 	// Copy the file contents to the output file
 	io.Copy(f, fh)
 
@@ -330,6 +343,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Print("Uploading file 6")
+
 	ip := r.RemoteAddr
 
 	err = db.PersistUploadFile(fh.FileName(), code, ip)
@@ -337,6 +352,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Print("Uploading file 7")
 
 	// Return a success message to the client
 	fmt.Fprintf(w, "/downloadFile/%s/%s", fh.FileName(), code)

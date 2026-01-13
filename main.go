@@ -13,7 +13,7 @@ import (
 func main() {
 
 	service.InitProps()
-	port := ":" + service.AppConfig.HttpPort
+	port := "0.0.0.0:" + service.AppConfig.HttpPort
 
 	db.InitPgPool()
 	defer db.CloseDb()
